@@ -1,0 +1,1477 @@
+{
+	"info": {
+		"_postman_id": "{{POSTMAIN_ID}}",
+		"name": "Contract Testing",
+		"description": "# About this collection\n\nThis collection helps you set up contract tests to ensure that two separate systems are compatible and can communicate with one another.\n\n## **Using the collection**\n\n**Step 1:** Send the sample requests and view the response and test results.\n\n**Step 2:** Replace the sample request URLs with your desired API endpoints.\n\n**Step 3:** Customize the tests in the \"Tests\" tab if needed. Don't forget to save your changes.\n\n### Resources\n\n[Scripting in Postman](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/)\n\n[Test script examples](https://learning.postman.com/docs/writing-scripts/script-references/test-examples/)\n\n[Postman Sandbox API reference](https://learning.postman.com/docs/sending-requests/grpc/postman-sandbox-api/#writing-assertions)\n\n[Using the Collection Runner](https://learning.postman.com/docs/collections/running-collections/intro-to-collection-runs/)\n\n[](https://postman.postman.co/documentation/24552533-5bead607-0197-4e1d-87d4-3160bc7631c1?entity=&branch=&version=)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17433459"
+	},
+	"item": [
+		{
+			"name": "movies",
+			"item": [
+				{
+					"name": "movie_details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Log all environment variables to the console",
+									"console.log(\"Environment:\", pm.environment.name);",
+									"console.log(\"Get all environment variables as an object\", pm.environment.toObject());",
+									"",
+									"// Parse response",
+									"const jsonData = pm.response.json();",
+									"",
+									"// 3. Content-Type header validation",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"// 4. Required fields exist in response",
+									"pm.test(\"Required fields exist in response\", function () {",
+									"    pm.expect(jsonData).to.have.property(\"id\").that.is.a(\"number\");",
+									"    pm.expect(jsonData).to.have.property(\"title\").that.is.a(\"string\");",
+									"    pm.expect(jsonData).to.have.property(\"overview\").that.is.a(\"string\");",
+									"    pm.expect(jsonData).to.have.property(\"release_date\").that.is.a(\"string\");",
+									"    pm.expect(jsonData).to.have.property(\"runtime\").that.is.a(\"number\");",
+									"    pm.expect(jsonData).to.have.property(\"genres\").that.is.a('array');",
+									"    if(jsonData.genres.length > 0) {",
+									"        jsonData.genres.forEach((genre, idx) => {",
+									"            pm.expect(genre, `Genre${idx}`).to.have.property(\"id\").that.is.a(\"number\");",
+									"            pm.expect(genre, `Genre${idx}`).to.have.property(\"name\").that.is.a(\"string\");",
+									"        });",
+									"    }",
+									"    pm.expect(jsonData).to.have.property(\"adult\").that.is.a(\"boolean\");",
+									"    pm.expect(jsonData).to.have.property(\"budget\").that.is.a(\"number\");",
+									"    pm.expect(jsonData).to.have.property(\"revenue\").that.is.a(\"number\");",
+									"    pm.expect(jsonData).to.have.property(\"status\").that.is.a(\"string\");",
+									"    pm.expect(jsonData).to.have.property(\"vote_average\").that.is.a(\"number\");",
+									"    pm.expect(jsonData).to.have.property(\"vote_count\").that.is.a(\"number\");",
+									"    pm.expect(jsonData).to.have.property(\"original_language\").that.is.a(\"string\");",
+									"    pm.expect(jsonData).to.have.property(\"original_title\").that.is.a(\"string\");",
+									"    pm.expect(jsonData).to.have.property(\"popularity\").that.is.a(\"number\");",
+									"    pm.expect(jsonData).to.have.property(\"production_companies\").that.is.a(\"array\");",
+									"    if (jsonData.production_companies.length > 0) {",
+									"        jsonData.production_companies.forEach(function (company, idx) {",
+									"            pm.expect(company, `Company${idx}`).to.have.property(\"id\").that.is.a(\"number\");",
+									"            pm.expect(company, `Company${idx}`).to.have.property(\"name\").that.is.a(\"string\");",
+									"            pm.expect(company, `Company${idx}`).to.have.property(\"origin_country\").that.is.a(\"string\");",
+									"        });",
+									"    }",
+									"    pm.expect(jsonData).to.have.property(\"production_countries\").that.is.a(\"array\");",
+									"    if (jsonData.production_countries.length > 0) {",
+									"        jsonData.production_countries.forEach(function (country, idx) {",
+									"            pm.expect(country, `Country at index ${idx}`).to.have.property(\"iso_3166_1\").that.is.a(\"string\");",
+									"            pm.expect(country, `Country at index ${idx}`).to.have.property(\"name\").that.is.a(\"string\");",
+									"        });",
+									"    }",
+									"    pm.expect(jsonData).to.have.property(\"spoken_languages\").that.is.a(\"array\");",
+									"    if (jsonData.spoken_languages.length > 0) {",
+									"        jsonData.spoken_languages.forEach(function (language, idx) {",
+									"            pm.expect(language, `Language${idx}`).to.have.property(\"english_name\").that.is.a(\"string\");",
+									"            pm.expect(language, `Language${idx}`).to.have.property(\"iso_639_1\").that.is.a(\"string\");",
+									"            pm.expect(language, `Language${idx}`).to.have.property(\"name\").that.is.a(\"string\");",
+									"        });",
+									"    }",
+									"    pm.expect(jsonData).to.have.property(\"origin_country\").that.is.a(\"array\");",
+									"    if (jsonData.origin_country.length > 0) {",
+									"        jsonData.origin_country.forEach(function (country, idx) {",
+									"            pm.expect(country, `Origin country ${idx}`).to.be.a(\"string\");",
+									"        });",
+									"    }",
+									"});",
+									"",
+									"const schema =",
+									"    {",
+									"  \"type\": \"object\",",
+									"  \"required\": [ \"adult\", \"id\", \"origin_country\", \"original_language\", \"original_title\", \"title\" ],",
+									"  \"properties\": {",
+									"    \"adult\": {",
+									"      \"type\": \"boolean\"",
+									"    },",
+									"    \"id\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"origin_country\": {",
+									"      \"type\": \"array\",",
+									"      \"items\": [",
+									"        {",
+									"          \"type\": \"string\"",
+									"        }",
+									"      ]",
+									"    },",
+									"    \"original_language\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"original_title\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"title\": {",
+									"      \"type\": \"string\"",
+									"    }",
+									"  }",
+									"};",
+									"pm.test(\"JSON Schema is valid\", function() {",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.url.addQueryParams('language=en-US');"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/movie/{{movie_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"movie",
+								"{{movie_id}}"
+							]
+						},
+						"description": "## Get Movie Details\n\nFetches comprehensive information about a specific movie from The Movie Database (TMDB) API. This endpoint returns detailed metadata including basic information, financial data, production details, and audience ratings.\n\n---\n\n### URL Structure\n\n```\n{{base_url}}/movie/{{movie_id}}?{{lang}}\n\n ```\n\n### Variables\n\n| Variable | Description |\n| --- | --- |\n| `base_url` | The TMDB API base URL (e.g., `https://api.themoviedb.org/3`) |\n| `movie_id` | The unique TMDB identifier for the movie to retrieve |\n| `lang` | Language parameter for localized content (e.g., `language=en-US`) |\n\n---\n\n### Response Fields\n\n#### Basic Information\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `id` | integer | Unique TMDB movie identifier |\n| `title` | string | Movie title (localized based on language parameter) |\n| `original_title` | string | Original movie title in its native language |\n| `overview` | string | Plot summary/description of the movie |\n| `tagline` | string | Marketing tagline for the movie |\n| `status` | string | Release status (e.g., \"Released\", \"In Production\") |\n| `adult` | boolean | Indicates if the movie is adult-only content |\n| `video` | boolean | Indicates if there's a video associated |\n\n#### Dates & Runtime\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `release_date` | string | Release date in YYYY-MM-DD format |\n| `runtime` | integer | Movie duration in minutes |\n\n#### Financial Data\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `budget` | integer | Production budget in USD |\n| `revenue` | integer | Total box office revenue in USD |\n\n#### Ratings & Popularity\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `vote_average` | number | Average user rating (0-10 scale) |\n| `vote_count` | integer | Total number of user votes |\n| `popularity` | number | TMDB popularity score |\n\n#### Media & Links\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `poster_path` | string | Path to movie poster image |\n| `backdrop_path` | string | Path to backdrop/banner image |\n| `homepage` | string | Official movie website URL |\n| `imdb_id` | string | IMDb identifier (e.g., \"tt1517268\") |\n\n#### Classification & Production\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `genres` | array | List of genre objects with `id` and `name` |\n| `production_companies` | array | Companies involved in production (includes `id`, `name`, `logo_path`, `origin_country`) |\n| `production_countries` | array | Countries where the movie was produced |\n| `spoken_languages` | array | Languages spoken in the movie |\n| `origin_country` | array | Country codes where the movie originated |\n| `original_language` | string | ISO 639-1 language code of original language |\n| `belongs_to_collection` | object/null | Collection info if movie is part of a series |\n\n---\n\n### Example Use Case\n\n**Scenario:** Display a movie details page in a streaming application.\n\n1. User searches for \"Barbie\" and selects the movie\n    \n2. Application calls this endpoint with `movie_id=346698`\n    \n3. Response provides all data needed to render:\n    - Movie poster and backdrop images\n        \n    - Title, tagline, and plot overview\n        \n    - Runtime, release date, and genres for filtering\n        \n    - Budget vs. revenue for financial insights\n        \n    - User ratings and vote counts for social proof\n        \n    - Production company logos for credits\n        \n\n---\n\n### Notes\n\n- Requires valid TMDB API authentication (Bearer token in Authorization header)\n    \n- Image paths must be prefixed with TMDB's image base URL to construct full URLs\n    \n- Financial data may be `0` if not publicly available"
+					},
+					"response": []
+				},
+				{
+					"name": "alternate_title",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response JSON",
+									"const jsonData = pm.response.json();",
+									"",
+									"// Test 3: Validate response structure has expected properties",
+									"pm.test(\"Response has required properties (id, titles)\", function () {",
+									"    pm.expect(jsonData).to.have.property(\"id\");",
+									"    pm.expect(jsonData).to.have.property(\"titles\");",
+									"});",
+									"",
+									"// Test 4: Validate that \"id\" is a number",
+									"pm.test(\"Property 'id' is a number\", function () {",
+									"    pm.expect(jsonData.id).to.be.a(\"number\");",
+									"});",
+									"",
+									"// Test 5: Validate that \"titles\" is an array",
+									"pm.test(\"Property 'titles' is an array\", function () {",
+									"    pm.expect(jsonData.titles).to.be.an(\"array\");",
+									"});",
+									"",
+									"// Test 6: Validate each title object has expected properties",
+									"pm.test(\"Each title object has required properties (iso_3166_1, title, type)\", function () {",
+									"    jsonData.titles.forEach(function (titleObj, index) {",
+									"        pm.expect(titleObj, `Title at index ${index}`).to.have.property(\"iso_3166_1\");",
+									"        pm.expect(titleObj, `Title at index ${index}`).to.have.property(\"title\");",
+									"        pm.expect(titleObj, `Title at index ${index}`).to.have.property(\"type\");",
+									"    });",
+									"});",
+									"",
+									"// Test 7: Validate data types of title object properties",
+									"pm.test(\"Title object properties have correct data types\", function () {",
+									"    jsonData.titles.forEach(function (titleObj, index) {",
+									"        pm.expect(titleObj.iso_3166_1, `iso_3166_1 at index ${index}`).to.be.a(\"string\");",
+									"        pm.expect(titleObj.title, `title at index ${index}`).to.be.a(\"string\");",
+									"        pm.expect(titleObj.type, `type at index ${index}`).to.be.a(\"string\");",
+									"    });",
+									"});",
+									"",
+									"const schema = {",
+									"  \"type\": \"object\",",
+									"  \"properties\": {",
+									"    \"id\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"titles\": {",
+									"      \"type\": \"array\",",
+									"      \"items\": [",
+									"        {",
+									"          \"type\": \"object\",",
+									"          \"properties\": {",
+									"            \"iso_3166_1\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"title\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"type\": {",
+									"              \"type\": \"string\"",
+									"            }",
+									"          },",
+									"          \"required\": [",
+									"            \"iso_3166_1\",",
+									"            \"title\",",
+									"            \"type\"",
+									"          ]",
+									"        },",
+									"        {",
+									"          \"type\": \"object\",",
+									"          \"properties\": {",
+									"            \"iso_3166_1\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"title\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"type\": {",
+									"              \"type\": \"string\"",
+									"            }",
+									"          },",
+									"          \"required\": [",
+									"            \"iso_3166_1\",",
+									"            \"title\",",
+									"            \"type\"",
+									"          ]",
+									"        },",
+									"        {",
+									"          \"type\": \"object\",",
+									"          \"properties\": {",
+									"            \"iso_3166_1\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"title\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"type\": {",
+									"              \"type\": \"string\"",
+									"            }",
+									"          },",
+									"          \"required\": [",
+									"            \"iso_3166_1\",",
+									"            \"title\",",
+									"            \"type\"",
+									"          ]",
+									"        },",
+									"        {",
+									"          \"type\": \"object\",",
+									"          \"properties\": {",
+									"            \"iso_3166_1\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"title\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"type\": {",
+									"              \"type\": \"string\"",
+									"            }",
+									"          },",
+									"          \"required\": [",
+									"            \"iso_3166_1\",",
+									"            \"title\",",
+									"            \"type\"",
+									"          ]",
+									"        },",
+									"        {",
+									"          \"type\": \"object\",",
+									"          \"properties\": {",
+									"            \"iso_3166_1\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"title\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"type\": {",
+									"              \"type\": \"string\"",
+									"            }",
+									"          },",
+									"          \"required\": [",
+									"            \"iso_3166_1\",",
+									"            \"title\",",
+									"            \"type\"",
+									"          ]",
+									"        },",
+									"        {",
+									"          \"type\": \"object\",",
+									"          \"properties\": {",
+									"            \"iso_3166_1\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"title\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"type\": {",
+									"              \"type\": \"string\"",
+									"            }",
+									"          },",
+									"          \"required\": [",
+									"            \"iso_3166_1\",",
+									"            \"title\",",
+									"            \"type\"",
+									"          ]",
+									"        },",
+									"        {",
+									"          \"type\": \"object\",",
+									"          \"properties\": {",
+									"            \"iso_3166_1\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"title\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"type\": {",
+									"              \"type\": \"string\"",
+									"            }",
+									"          },",
+									"          \"required\": [",
+									"            \"iso_3166_1\",",
+									"            \"title\",",
+									"            \"type\"",
+									"          ]",
+									"        },",
+									"        {",
+									"          \"type\": \"object\",",
+									"          \"properties\": {",
+									"            \"iso_3166_1\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"title\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"type\": {",
+									"              \"type\": \"string\"",
+									"            }",
+									"          },",
+									"          \"required\": [",
+									"            \"iso_3166_1\",",
+									"            \"title\",",
+									"            \"type\"",
+									"          ]",
+									"        },",
+									"        {",
+									"          \"type\": \"object\",",
+									"          \"properties\": {",
+									"            \"iso_3166_1\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"title\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"type\": {",
+									"              \"type\": \"string\"",
+									"            }",
+									"          },",
+									"          \"required\": [",
+									"            \"iso_3166_1\",",
+									"            \"title\",",
+									"            \"type\"",
+									"          ]",
+									"        },",
+									"        {",
+									"          \"type\": \"object\",",
+									"          \"properties\": {",
+									"            \"iso_3166_1\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"title\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"type\": {",
+									"              \"type\": \"string\"",
+									"            }",
+									"          },",
+									"          \"required\": [",
+									"            \"iso_3166_1\",",
+									"            \"title\",",
+									"            \"type\"",
+									"          ]",
+									"        },",
+									"        {",
+									"          \"type\": \"object\",",
+									"          \"properties\": {",
+									"            \"iso_3166_1\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"title\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"type\": {",
+									"              \"type\": \"string\"",
+									"            }",
+									"          },",
+									"          \"required\": [",
+									"            \"iso_3166_1\",",
+									"            \"title\",",
+									"            \"type\"",
+									"          ]",
+									"        },",
+									"        {",
+									"          \"type\": \"object\",",
+									"          \"properties\": {",
+									"            \"iso_3166_1\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"title\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"type\": {",
+									"              \"type\": \"string\"",
+									"            }",
+									"          },",
+									"          \"required\": [",
+									"            \"iso_3166_1\",",
+									"            \"title\",",
+									"            \"type\"",
+									"          ]",
+									"        },",
+									"        {",
+									"          \"type\": \"object\",",
+									"          \"properties\": {",
+									"            \"iso_3166_1\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"title\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"type\": {",
+									"              \"type\": \"string\"",
+									"            }",
+									"          },",
+									"          \"required\": [",
+									"            \"iso_3166_1\",",
+									"            \"title\",",
+									"            \"type\"",
+									"          ]",
+									"        },",
+									"        {",
+									"          \"type\": \"object\",",
+									"          \"properties\": {",
+									"            \"iso_3166_1\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"title\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"type\": {",
+									"              \"type\": \"string\"",
+									"            }",
+									"          },",
+									"          \"required\": [",
+									"            \"iso_3166_1\",",
+									"            \"title\",",
+									"            \"type\"",
+									"          ]",
+									"        },",
+									"        {",
+									"          \"type\": \"object\",",
+									"          \"properties\": {",
+									"            \"iso_3166_1\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"title\": {",
+									"              \"type\": \"string\"",
+									"            },",
+									"            \"type\": {",
+									"              \"type\": \"string\"",
+									"            }",
+									"          },",
+									"          \"required\": [",
+									"            \"iso_3166_1\",",
+									"            \"title\",",
+									"            \"type\"",
+									"          ]",
+									"        }",
+									"      ]",
+									"    }",
+									"  },",
+									"  \"required\": [",
+									"    \"id\",",
+									"    \"titles\"",
+									"  ]",
+									"};",
+									"pm.test(\"JSON Schema Validation\", function () {",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{api_key}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/movie/{{movie_id}}/alternative_titles",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"movie",
+								"{{movie_id}}",
+								"alternative_titles"
+							]
+						},
+						"description": "## Get Alternative Titles\n\nRetrieves a list of alternative titles for a specific movie from The Movie Database (TMDB) API. Alternative titles include localized movie names used in different countries and regions.\n\n---\n\n### Path Parameters\n\n| Parameter | Type | Required | Description |\n| --- | --- | --- | --- |\n| `movie_id` | integer | Yes | The unique identifier of the movie in TMDB |\n\n---\n\n### Response Structure\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `id` | number | The TMDB movie ID |\n| `titles` | array | List of alternative title objects |\n\n#### Title Object Properties\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `iso_3166_1` | string | ISO 3166-1 country code (e.g., \"US\", \"CN\", \"MX\") |\n| `title` | string | The alternative title used in that country/region |\n| `type` | string | The type of title (e.g., working title, festival title) - may be empty |\n\n---\n\n### Example Response\n\n``` json\n{\n  \"id\": 346698,\n  \"titles\": [\n    {\n      \"iso_3166_1\": \"US\",\n      \"title\": \"Barbie: The Movie\",\n      \"type\": \"\"\n    },\n    {\n      \"iso_3166_1\": \"CN\",\n      \"title\": \"芭比\",\n      \"type\": \"\"\n    },\n    {\n      \"iso_3166_1\": \"MX\",\n      \"title\": \"Barbie: La Pelicula\",\n      \"type\": \"\"\n    }\n  ]\n}\n\n ```\n\n---\n\n### Authentication\n\nRequires a valid TMDB API Bearer token in the Authorization header."
+					},
+					"response": []
+				},
+				{
+					"name": "changes",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.url.addQueryParams('page=1');",
+									"pm.variables.set(\"movie_id\", \"83533\")"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response JSON",
+									"const jsonData = pm.response.json();",
+									"",
+									" // Test 3: Validate response structure has expected properties",
+									"pm.test(\"Response has required properties (id, action)\", function () {",
+									"    pm.expect(jsonData).to.have.property(\"changes\");",
+									"    pm.expect(jsonData.changes).to.be.an(\"array\");",
+									"    pm.expect(jsonData).to.have.nested.property(\"changes[0].items[0].action\");",
+									"});",
+									"",
+									"// 3. Content-Type header validation",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Response has valid structure\", function () {",
+									"    if(jsonData.changes.length > 0) {",
+									"        jsonData.changes.forEach((change, idx) => {",
+									"            pm.expect(change, `Change ${idx}`).to.have.property(\"key\");",
+									"            pm.expect(change.key, `Change ${idx} items`).to.be.an('string');",
+									"            pm.expect(change, `Change ${idx}`).to.have.property(\"items\");",
+									"            pm.expect(change.items, `Change ${idx} items`).to.be.an('array');",
+									"",
+									"            if (change.items.length > 0) {",
+									"                change.items.forEach((item, itemIndex) => {",
+									"                    pm.expect(item, `Item ${itemIndex}`).to.have.property(\"id\");",
+									"                    pm.expect(item, `Item${itemIndex}`).to.have.property(\"action\");",
+									"                    pm.expect(item, `Item${itemIndex}`).to.have.property(\"time\");",
+									"                    pm.expect(item, `Item${itemIndex}`).to.have.property(\"iso_639_1\");",
+									"                    pm.expect(item, `Item${itemIndex}`).to.have.property(\"iso_3166_1\");",
+									"                    if(['added', 'updated'].includes(item.action)) {",
+									"                        pm.expect(item, `Item${itemIndex}`).to.have.property(\"value\");",
+									"                    }",
+									"                    if(item.action === 'deleted') {",
+									"                            pm.expect(item, `Item ${itemIndex}`).to.have.property(\"original_value\");",
+									"                    }",
+									"                });",
+									"            }",
+									"        });",
+									"    }",
+									"",
+									"});",
+									"",
+									"// 4. Required fields exist in response",
+									"pm.test(\"Required fields exist in response\", function () {",
+									"    // pm.expect(jsonData).to.have.nested.property(\"changes[0].items[0].value.poster.file_path\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{api_key}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/movie/{{movie_id}}/changes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"movie",
+								"{{movie_id}}",
+								"changes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "credits",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.url.addQueryParams('language=en-US');"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/movie/{{movie_id}}/credits",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"movie",
+								"{{movie_id}}",
+								"credits"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "latest",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/movie/latest",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"movie",
+								"latest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "lists",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.url.addQueryParams([",
+									"    `page=1`,",
+									"    'language=en-US']);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/movie/{{movie_id}}/lists",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"movie",
+								"{{movie_id}}",
+								"lists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add_rating",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.url.addQueryParams('{{session_id}}');",
+									"",
+									"const rNum = utils.randNum();",
+									"console.log(\"New random number for rating: \", rNum)",
+									"pm.variables.set('randNum', rNum);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const schema = {",
+									"  \"type\": \"object\",",
+									"  \"properties\": {",
+									"    \"success\": {",
+									"      \"type\": \"boolean\"",
+									"    },",
+									"    \"status_code\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"status_message\": {",
+									"      \"type\": \"string\"",
+									"    }",
+									"  },",
+									"  \"required\": [",
+									"    \"success\",",
+									"    \"status_code\",",
+									"    \"status_message\"",
+									"  ]",
+									"};",
+									"pm.response.to.have.jsonSchema(schema);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": {{randNum}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/movie/{{movie_id}}/rating",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"movie",
+								"{{movie_id}}",
+								"rating"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete_rating",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.url.addQueryParams('{{session_id}}');"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/movie/{{movie_id}}/rating",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"movie",
+								"{{movie_id}}",
+								"rating"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "account",
+			"item": [
+				{
+					"name": "lists",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse response",
+									"const jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Response has ID property\", function () {",
+									"    pm.expect(jsonData).to.have.nested.property(\"results[0].id\");",
+									"});",
+									"",
+									"pm.test(\"Property 'results[0].id' is a number\", function () {",
+									"    pm.expect(jsonData.results[0].id).to.be.a(\"number\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.url.addQueryParams('page=1');"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/account/{{account_id}}/lists",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"account",
+								"{{account_id}}",
+								"lists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.log(\"List ID: \", pm.response.json().id)"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.url.addQueryParams('{{sessioon_id}}');"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/account/{{account_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"account",
+								"{{account_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add_favorite",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n  \"media_id\": 640146,\n  \"media_type\": \"movie\",\n  \"favorite\": true\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/account/{{account_id}}/favorite",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"account",
+								"{{account_id}}",
+								"favorite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "favorite_movies",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.url.addQueryParams([",
+									"    `page=1`,",
+									"    'language=en-US',",
+									"    'sort_by=created_at.asc'",
+									"]);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/account/{{account_id}}/favorite/movies",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"account",
+								"{{account_id}}",
+								"favorite",
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add_to_watchlist",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const bearerToken = pm.environment.get('tmdb_bearer_token');",
+									"console.log(\"Authorization header value:\", 'Bearer ' + bearerToken);",
+									"",
+									"// Debug: Log authentication status",
+									"console.log(\"=== Authentication Debug ===\");",
+									"if (!bearerToken) {",
+									"    console.error(\"❌ ERROR: 'tmdb_bearer_token' environment variable is not set!\");",
+									"    console.log(\"Please set the 'tmdb_bearer_token' variable in your tmdb_env environment.\");",
+									"} else {",
+									"    console.log(\"✅ Bearer token found in environment (length: \" + bearerToken.length + \" chars)\");",
+									"}",
+									"",
+									"const nestedRequestId = {",
+									"  'method': 'GET',",
+									"  'url': 'https://api.themoviedb.org/3/discover/movie?page=1&language=en-US&include_adult=false&include_video=false&sort_by=popularity.desc',",
+									"  'headers': {",
+									"    'Authorization': 'Bearer ' + bearerToken,",
+									"    'accept': 'application/json'",
+									"  }",
+									"};",
+									"console.log(\"Full nested request config:\", JSON.stringify(nestedRequestId, null, 2));",
+									"console.log(\"Calling Nested request to discover movies...\");",
+									"pm.sendRequest(nestedRequestId, (err, response) => {",
+									"    console.log(\"Inside Nested request response...\");",
+									"",
+									"    if (err) {",
+									"        console.error(\"❌ Nested request failed:\", err);",
+									"        return;",
+									"    }",
+									"",
+									"    if (response.code !== 200) {",
+									"        console.error(\"❌ Nested request failed with status:\", response.code);",
+									"        console.error(\"Response body:\", response.json());",
+									"        return;",
+									"    }",
+									"});",
+									"",
+									"// console.log(\"media IDs in add_to_watchlist request: \", movieIds);",
+									"// const rNum = _.sample(movieIds);",
+									"// // const rNum = Math.floor(Math.random() * movieIds.length);",
+									"// pm.variables.set('randNum', rNum);",
+									"",
+									"pm.request.url.addQueryParams('{{session_id}}');"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"media_type\": \"movie\",\n  \"media_id\": 100,\n  \"watchlist\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/account/({{account_id}}})/watchlist",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"account",
+								"({{account_id}}})",
+								"watchlist"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "discover",
+			"item": [
+				{
+					"name": "movie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"console.log(\"media IDs: \", jsonData.results.map(result => result.id));",
+									"const movieIds = jsonData.results.map(result => result.id);",
+									"",
+									"pm.test(\"Check if the response contains the correct number of results\", function () {",
+									"    pm.expect(jsonData.results.length).to.eql(20);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const myNum = utils.randNum();",
+									"console.log(\"Generated Random Number: \" + myNum);",
+									"",
+									"pm.request.url.addQueryParams([",
+									"    `page=${myNum}`,",
+									"    'language=en-US',",
+									"    'include_adult=false',",
+									"    'include_video=false',",
+									"    'sort_by=popularity.desc'",
+									"]);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/discover/movie",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"discover",
+								"movie"
+							]
+						},
+						"description": "# Discover Popular Movies\n\nThis endpoint retrieves a paginated list of movies from the TMDB database, sorted by popularity in descending order.\n\n## Query Parameters\n\n| Parameter | Value | Description |\n| --- | --- | --- |\n| `include_adult` | `false` | Excludes adult content from results |\n| `include_video` | `false` | Filters out video content |\n| `language` | `en-US` | Returns results in English (US) |\n| `sort_by` | `popularity.desc` | Sorts movies by popularity (most popular first) |\n| `page` | _dynamic_ | Page number for pagination (set via pre-request script) |\n\n## Pre-Request Script Behavior\n\nThe pre-request script dynamically generates a random page number using `utils.randNum()` and appends it as a query parameter. This allows testing across different pages of results without manual intervention.\n\n``` javascript\nconst myNum = utils.randNum();\npm.request.url.addQueryParams(`page=${myNum}`);\n\n ```\n\n## Response Structure\n\nThe response returns a paginated list of movies with the following structure:\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `page` | integer | Current page number |\n| `results` | array | Array of movie objects |\n| `total_pages` | integer | Total number of available pages |\n| `total_results` | integer | Total count of movies matching the query |\n\n### Movie Object Fields\n\nEach movie in the `results` array contains:\n\n- `id` - Unique movie identifier\n    \n- `title` - Movie title\n    \n- `original_title` - Original language title\n    \n- `overview` - Brief plot summary\n    \n- `poster_path` - Path to poster image\n    \n- `backdrop_path` - Path to backdrop image\n    \n- `release_date` - Release date (YYYY-MM-DD)\n    \n- `vote_average` - Average user rating\n    \n- `vote_count` - Number of votes\n    \n- `popularity` - Popularity score\n    \n- `genre_ids` - Array of genre identifiers\n    \n- `adult` - Adult content flag\n    \n- `video` - Video flag\n    \n\n## Post-Response Script Behavior\n\nThe post-response script extracts and logs all media IDs from the response for debugging/verification purposes:\n\n``` javascript\nconst jsonData = pm.response.json();\nconsole.log(\"media IDs: \", jsonData.results.map(result => result.id));\n\n ```\n\nThe description now includes:\n\n- **Endpoint Overview** - Explains that this discovers popular movies from TMDB\n    \n- **Query Parameters Table** - Documents `include_adult`, `include_video`, `language`, `sort_by`, and the dynamic `page` parameter\n    \n- **Pre-Request Script Behavior** - Describes how a random page number is generated using `utils.randNum()`\n    \n- **Response Structure** - Details the paginated response format with `page`, `results`, `total_pages`, and `total_results`\n    \n- **Movie Object Fields** - Lists all properties returned for each movie (id, title, overview, poster_path, vote_average, release_date, etc.)\n    \n- **Post-Response Script Behavior** - Explains the media ID extraction and logging"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "configurations",
+			"item": [
+				{
+					"name": "details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/configuration",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"configuration"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "authentication",
+			"item": [
+				{
+					"name": "create_request_token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/authentication/token/new",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"authentication",
+								"token",
+								"new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_session",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{api_key}}"
+							},
+							{
+								"key": "accept",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request_token\": \"{{request_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/authentication/session/new",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"authentication",
+								"session",
+								"new"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Check for Valid Form Data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const json = pm.response.json();\r",
+							"\r",
+							"// Validate raw body sent in the request, be it form-data or JSON\r",
+							"pm.test(\"`form` should contain the correct form data\", function () {\r",
+							"    pm.expect(json.form).to.be.an('object');\r",
+							"    pm.expect(json.form.foo1).to.eql('bar1');\r",
+							"    pm.expect(json.form.foo2).to.eql('bar2');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "foo1",
+							"value": "bar1",
+							"type": "text"
+						},
+						{
+							"key": "foo2",
+							"value": "bar2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/post",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"post"
+					]
+				},
+				"description": "The tests in this request validate that the request body sent as form-data is valid."
+			},
+			"response": []
+		},
+		{
+			"name": "authentication",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://www.themoviedb.org/authenticate/{{api_key}}",
+					"protocol": "https",
+					"host": [
+						"www",
+						"themoviedb",
+						"org"
+					],
+					"path": [
+						"authenticate",
+						"{{api_key}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{api_key}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					"if(pm.request.method === 'POST' || pm.request.method === 'PUT' || pm.request.method === 'DELETE') {",
+					"    if (pm.request.body && pm.request.body.mode === 'raw') {",
+					"        pm.request.headers.add({",
+					"            key: \"Content-Type\", ",
+					"            value: \"application/json;charset=utf-8\"",
+					"        });",
+					"    } ",
+					"} else {",
+					"    pm.request.headers.add({",
+					"        key: \"accept\",",
+					"        value: \"application/json\"",
+					"    });",
+					"}",
+					"console.log(\"movies pre-request script\", pm.request.headers.toJSON())",
+					"",
+					"// Generates random number",
+					"utils = {",
+					"    randNum: function genRandNum() {",
+					"        return Math.floor(Math.random() * 10) + 1; // Generates a random number between 1 and 10",
+					"    }",
+					"};"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					"// Parse response",
+					"const jsonData = pm.response.json();",
+					"",
+					"// Status code validation",
+					"pm.test(\"Status code is 200/201\", function () {",
+					"    if(pm.request.method === 'POST' || pm.request.method === 'PUT') {",
+					"        pm.response.to.have.status(201);",
+					"    } else {",
+					"        pm.response.to.have.status(200);",
+					"    }",
+					"});",
+					"",
+					"// Response time validation",
+					"pm.test(\"Response time is acceptable (under 2000ms)\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+					"});",
+					"",
+					"// Validate that the response is json object",
+					"pm.test(\"Response is a json object\", function () {",
+					"    pm.expect(jsonData).to.be.an('object');",
+					"});",
+					"",
+					"// Content-Type header validation",
+					"pm.test(\"Content-Type header is application/json\", function () {",
+					"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "account_id",
+			"value": ""
+		},
+		{
+			"key": "movie_id",
+			"value": ""
+		},
+		{
+			"key": "session_id",
+			"value": ""
+		}
+	]
+}
